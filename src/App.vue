@@ -28,7 +28,7 @@ export default {
     setIdForEachRecord(records) {
       records.forEach(record => {
         record.data['custom_id'] = uuidv4()
-        console.log(record.data.custom_id)
+        record.data['is_shown'] = false
         Object.keys(record.kids).forEach(key => {
           this.setIdForEachRecord(record.kids[key].records)
         })

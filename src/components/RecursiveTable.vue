@@ -13,10 +13,10 @@
       <tr>
         <td>
           <button v-if="hasKids(item.kids)"
-                  :id="'btn-' + item.data.custom_id"
-                  @click="toggleRow(item.data.custom_id)"
+                  @click="toggleRow(item.data)"
                   class="btn btn-outline-success btn-sm" :key="item.data.custom_id">
-            Show
+            <template v-if="item.data.is_shown">Hide</template>
+            <template v-else>Show</template>
           </button>
         </td>
         <td v-for="d in getData(item.data)" :key="d.custom_id">
@@ -29,8 +29,9 @@
         </td>
       </tr>
 
-      <tr v-if="Object.keys(item.kids).length > 0" :key="item.data.custom_id"
-          :id="'accordion-' + item.data.custom_id" class="d-none">
+      <tr v-if="Object.keys(item.kids).length > 0" v-show="item.data.is_shown"
+          :key="item.data.custom_id"
+          :id="'accordion-' + item.data.custom_id" >
         <td :colspan="Object.keys(item.data).length + 1"
             :style="'padding-left:' + (level + 1) * 2 + 'em' ">
           <div>
@@ -67,13 +68,7 @@ export default {
       this.$emit('remove-record', record)
     },
     toggleRow(id) {
-      console.log(id)
-      const el = document.getElementById(`accordion-${id}`)
-      if (el) {
-        el.classList.toggle('d-none')
-        const btn = document.getElementById(`btn-${id}`)
-        btn.innerText = el.classList.contains('d-none') ? 'Show' : 'Hide'
-      }
+      id.is_shown = !id.is_shown
     },
     getKey(kids) {
       return Object.keys(kids)[0]
